@@ -53,17 +53,17 @@ find_package(Threads REQUIRED)
 
 ###########################################################
 # Configure header with our version information
-configure_file(${CMAKE_SOURCE_DIR}/config/Config.hh.in
-        ${CMAKE_SOURCE_DIR}/src/core/include/RAT/Config.hh
+configure_file(${PROJECT_SOURCE_DIR}/config/Config.hh.in
+        ${PROJECT_SOURCE_DIR}/src/core/include/RAT/Config.hh
         @ONLY NEWLINE_STYLE UNIX)
 
 # Configure local scripts
 set(RATROOT ${PROJECT_BINARY_DIR})
 set(RATSHARE ${PROJECT_SOURCE_DIR})
-configure_file(${CMAKE_SOURCE_DIR}/config/ratpac.sh.in
+configure_file(${PROJECT_SOURCE_DIR}/config/ratpac.sh.in
        ${PROJECT_SOURCE_DIR}/ratpac.sh
        @ONLY NEWLINE_STYLE UNIX)
-configure_file(${CMAKE_SOURCE_DIR}/config/ratpac.csh.in
+configure_file(${PROJECT_SOURCE_DIR}/config/ratpac.csh.in
         ${PROJECT_SOURCE_DIR}/ratpac.csh
        @ONLY NEWLINE_STYLE UNIX)
 
@@ -79,10 +79,10 @@ add_subdirectory(tools)
 # Configure global scripts
 set(RATROOT ${CMAKE_INSTALL_PREFIX})
 set(RATSHARE ${CMAKE_INSTALL_PREFIX}/share/RAT)
-configure_file(${CMAKE_SOURCE_DIR}/config/ratpac.sh.in
+configure_file(${PROJECT_SOURCE_DIR}/config/ratpac.sh.in
        ${RATPAC_BINARY_DIR}/ratpac.sh
        @ONLY NEWLINE_STYLE UNIX)
-configure_file(${CMAKE_SOURCE_DIR}/config/ratpac.csh.in
+configure_file(${PROJECT_SOURCE_DIR}/config/ratpac.csh.in
        ${RATPAC_BINARY_DIR}/ratpac.csh
        @ONLY NEWLINE_STYLE UNIX)
 
