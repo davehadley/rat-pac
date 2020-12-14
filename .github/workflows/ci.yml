@@ -1,0 +1,51 @@
+name: ci
+
+env:
+  BUILD_TYPE: Release
+
+on: 
+  push:
+    branches: [master, feat-github-ci]
+  pull_request:
+    branches: [master, feat-github-ci]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-20.04
+    strategy:
+      max-parallel: 5
+    timeout-minutes: 600
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Get Dependencies
+      shell: bash
+      # see https://geant4.web.cern.ch/node/1604
+      run: |
+        # ROOT 6
+        wget https://root.cern/download/root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
+        tar -xf root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
+        # GEANT4
+        wget https://geant4-data.web.cern.ch/releases/lib4.10.4.p03/Linux-g++4.8.5-CC7.tar.gz
+        tar -xf Linux-g++4.8.5-CC7.tar.gz
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{runner.workspace}}/build
+      run: |
+        source root/bin/thisroot.sh
+        source Geant4-10.4.3-Linux/bin/geant4.sh
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE="$BUILD_TYPE -DCMAKE_PREFIX_PATH=${{runner.workspace}}/Geant4-10.4.3-Linux/lib64/Geant4-10.4.3/;${{runner.workspace}}/root/cmake;$CMAKE_PREFIX_PATH"
+
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Test
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: ctest -C $BUILD_TYPE
