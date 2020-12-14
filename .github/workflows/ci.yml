@@ -23,8 +23,8 @@ jobs:
         . spack/share/spack/setup-env.sh
         spack env create env
         spack env activate env
-        spack install root@6.18.04
-        spack install geant4@10.4.3 
+        spack install --cache-only root@6.18.04
+        spack install --cache-only geant4@10.4.3 
 
     # - name: Get Dependencies
     #   shell: bash
