@@ -20,7 +20,7 @@ jobs:
     - name: Install Dependencies
       run: |
         git clone https://github.com/spack/spack.git
-        . spack/share/spack/setup-env.sh
+        . $GITHUB_WORKSPACE/spack/share/spack/setup-env.sh
         spack env create env
         spack env activate env
         spack install --cache-only root@6.18.04
@@ -44,7 +44,7 @@ jobs:
       shell: bash
       working-directory: ${{runner.workspace}}/build
       run: |
-        . spack/share/spack/setup-env.sh
+        . $GITHUB_WORKSPACE/spack/share/spack/setup-env.sh
         spack env activate env
         export CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/Geant4-10.4.3-Linux/lib64/Geant4-10.4.3/:$GITHUB_WORKSPACE/root/cmake:$CMAKE_PREFIX_PATH
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
@@ -53,7 +53,7 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: |
-        . spack/share/spack/setup-env.sh
+        . $GITHUB_WORKSPACE/spack/share/spack/setup-env.sh
         spack env activate env
         cmake --build . --config $BUILD_TYPE
 
