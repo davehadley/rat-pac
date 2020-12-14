@@ -55,8 +55,7 @@ jobs:
       run: |
         source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.18.04/x86_64-ubuntu18-gcc74-opt/bin/thisroot.sh
         ls /cvmfs/sft.cern.ch/lcg/app/releases/
-        ls /cvmfs/sft.cern.ch/lcg/app/releases/geant4/
-        find /cvmfs/sft.cern.ch/lcg/app/releases/geant4/ -name geant4.sh
+        find /cvmfs/sft.cern.ch/lcg/app/releases -name geant4.sh
         source /cvmfs/sft.cern.ch/lcg/app/releases/geant4/4.10.04/x86_64-ubuntu18-gcc74-opt/bin/geant4.sh
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE 
 
