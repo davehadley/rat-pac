@@ -41,10 +41,10 @@ jobs:
         rm -f cvmfs-release-latest_all.deb
         sudo apt-get update
         sudo apt-get install cvmfs
-        cvmfs_config setup
-        echo "CVMFS_REPOSITORIES=sft.cern.ch" > /etc/cvmfs/default.local
-        echo "CVMFS_HTTP_PROXY=DIRECT" >> /etc/cvmfs/default.local
-        cvmfs_config probe
+        sudo cvmfs_config setup
+        sudo echo "CVMFS_REPOSITORIES=sft.cern.ch" > /etc/cvmfs/default.local
+        sudo echo "CVMFS_HTTP_PROXY=DIRECT" >> /etc/cvmfs/default.local
+        sudo cvmfs_config probe
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
