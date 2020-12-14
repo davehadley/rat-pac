@@ -45,7 +45,7 @@ option(RATPAC_RAT "build rat executable" ON)
 find_package(ROOT CONFIG REQUIRED COMPONENTS Minuit2 PyROOT)
 include(${ROOT_USE_FILE})
 
-find_package(Geant4 REQUIRED COMPONENTS qt)
+find_package(Geant4 REQUIRED)
 include(${Geant4_USE_FILE})
 
 find_package(Threads REQUIRED)
