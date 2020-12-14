@@ -18,7 +18,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      run: sudo apt-get --yes install qt5-default
+
     - name: Get Dependencies
       shell: bash
       # see https://geant4.web.cern.ch/node/1604
