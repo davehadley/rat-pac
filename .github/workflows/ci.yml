@@ -17,16 +17,34 @@ jobs:
     timeout-minutes: 600
     steps:
     - uses: actions/checkout@v2
-    - name: Get Dependencies
+    # - name: Get ROOT
+    #   shell: bash
+    #   run: |
+    #     # ROOT 6
+    #     wget https://root.cern/download/root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
+    #     tar -xf root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
+
+    # - name: Build GEANT4
+    #     shell: bash
+    #     run: |
+    #       # sudo apt-get install libexpat1-dev
+    #       # sudo apt-get install dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev libxft-dev libxext-dev libssl-dev
+    #       # sudo apt-get install -y libtinfo5
+    #       # GEANT4
+    #       wget https://geant4-data.web.cern.ch/releases/geant4.10.06.p03.tar.gz
+    #       tar -xf Linux-g++4.8.5-CC7.tar.gz
+    - name: Install CVMFS
       shell: bash
       run: |
-        sudo apt-get install libexpat1-dev
-        # ROOT 6
-        wget https://root.cern/download/root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
-        tar -xf root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
-        # GEANT4
-        wget https://geant4-data.web.cern.ch/releases/lib4.10.4.p03/Linux-g++4.8.5-CC7.tar.gz
-        tar -xf Linux-g++4.8.5-CC7.tar.gz
+        wget https://ecsft.cern.ch/dist/cvmfs/cvmfs-release/cvmfs-release-latest_all.deb
+        sudo dpkg -i cvmfs-release-latest_all.deb
+        rm -f cvmfs-release-latest_all.deb
+        sudo apt-get update
+        sudo apt-get install cvmfs
+        cvmfs_config setup
+        echo "CVMFS_REPOSITORIES=sft.cern.ch" > /etc/cvmfs/default.local
+        echo "CVMFS_HTTP_PROXY=DIRECT" >> /etc/cvmfs/default.local
+        cvmfs_config probe
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
@@ -35,10 +53,12 @@ jobs:
       shell: bash
       working-directory: ${{runner.workspace}}/build
       run: |
-        export ROOT_DIR=$GITHUB_WORKSPACE/root/cmake
-        export Geant4_DIR=$GITHUB_WORKSPACE/Geant4-10.4.3-Linux/lib64/Geant4-10.4.3
-        sed -i 's/COMPONENTS qt/ /g' $GITHUB_WORKSPACE/CMakeLists.txt
-        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGEANT4_INSTALL_DATA=ON
+        source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.18.04/x86_64-ubuntu18-gcc74-opt/bin/thisroot.sh
+        ls /cvmfs/sft.cern.ch/lcg/app/releases/
+        ls /cvmfs/sft.cern.ch/lcg/app/releases/geant4/
+        find /cvmfs/sft.cern.ch/lcg/app/releases/geant4/ -name geant4.sh
+        source /cvmfs/sft.cern.ch/lcg/app/releases/geant4/4.10.04/x86_64-ubuntu18-gcc74-opt/bin/geant4.sh
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE 
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
