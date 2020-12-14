@@ -38,8 +38,9 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       run: |
         export ROOT_DIR=$GITHUB_WORKSPACE/root/cmake
-        export ROOT_DIR=$GITHUB_WORKSPACE/Geant4-10.4.3-Linux/lib64/Geant4-10.4.3
-        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGeant4_USES_QT5=ON
+        export Geant4_DIR=$GITHUB_WORKSPACE/Geant4-10.4.3-Linux/lib64/Geant4-10.4.3
+        sed -i 's/COMPONENTS qt/ /g' $GITHUB_WORKSPACE/CMakeLists.txt
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DGEANT4_INSTALL_DATA=ON
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
