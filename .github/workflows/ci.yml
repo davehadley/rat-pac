@@ -17,7 +17,8 @@ jobs:
     timeout-minutes: 600
     steps:
     - uses: actions/checkout@v2
-
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
     - name: Get Dependencies
       shell: bash
       # see https://geant4.web.cern.ch/node/1604
