@@ -17,19 +17,25 @@ jobs:
     timeout-minutes: 600
     steps:
     - uses: actions/checkout@v2
-    - name: Install Qt
-      run: sudo apt-get --yes install qt5-default
-
-    - name: Get Dependencies
-      shell: bash
-      # see https://geant4.web.cern.ch/node/1604
+    - name: Install Dependencies
       run: |
-        # ROOT 6
-        wget https://root.cern/download/root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
-        tar -xf root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
-        # GEANT4
-        wget https://geant4-data.web.cern.ch/releases/lib4.10.4.p03/Linux-g++4.8.5-CC7.tar.gz
-        tar -xf Linux-g++4.8.5-CC7.tar.gz
+        git clone https://github.com/spack/spack.git
+        . spack/share/spack/setup-env.sh
+        spack env create env
+        spack env activate env
+        spack install root@6.18.04
+        spack install geant4@10.4.3 
+
+    # - name: Get Dependencies
+    #   shell: bash
+    #   # see https://geant4.web.cern.ch/node/1604
+    #   run: |
+    #     # ROOT 6
+    #     wget https://root.cern/download/root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
+    #     tar -xf root_v6.18.04.Linux-ubuntu18-x86_64-gcc7.4.tar.gz
+    #     # GEANT4
+    #     wget https://geant4-data.web.cern.ch/releases/lib4.10.4.p03/Linux-g++4.8.5-CC7.tar.gz
+    #     tar -xf Linux-g++4.8.5-CC7.tar.gz
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
@@ -38,15 +44,18 @@ jobs:
       shell: bash
       working-directory: ${{runner.workspace}}/build
       run: |
-        source $GITHUB_WORKSPACE/root/bin/thisroot.sh
-        source $GITHUB_WORKSPACE/Geant4-10.4.3-Linux/bin/geant4.sh
+        . spack/share/spack/setup-env.sh
+        spack env activate env
         export CMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/Geant4-10.4.3-Linux/lib64/Geant4-10.4.3/:$GITHUB_WORKSPACE/root/cmake:$CMAKE_PREFIX_PATH
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake --build . --config $BUILD_TYPE
+      run: |
+        . spack/share/spack/setup-env.sh
+        spack env activate env
+        cmake --build . --config $BUILD_TYPE
 
     - name: Test
       working-directory: ${{runner.workspace}}/build
