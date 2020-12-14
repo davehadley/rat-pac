@@ -36,8 +36,8 @@ jobs:
       shell: bash
       working-directory: ${{runner.workspace}}/build
       run: |
-        source root/bin/thisroot.sh
-        source Geant4-10.4.3-Linux/bin/geant4.sh
+        source $GITHUB_WORKSPACE/root/bin/thisroot.sh
+        source $GITHUB_WORKSPACE/Geant4-10.4.3-Linux/bin/geant4.sh
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE="$BUILD_TYPE -DCMAKE_PREFIX_PATH=${{runner.workspace}}/Geant4-10.4.3-Linux/lib64/Geant4-10.4.3/;${{runner.workspace}}/root/cmake;$CMAKE_PREFIX_PATH"
 
     - name: Build
