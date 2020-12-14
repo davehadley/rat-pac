@@ -42,8 +42,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install cvmfs
         sudo cvmfs_config setup
-        sudo echo "CVMFS_REPOSITORIES=sft.cern.ch" > /etc/cvmfs/default.local
-        sudo echo "CVMFS_HTTP_PROXY=DIRECT" >> /etc/cvmfs/default.local
+        sudo sh -c "echo CVMFS_REPOSITORIES=sft.cern.ch > /etc/cvmfs/default.local"
+        sudo sh -c "echo "CVMFS_HTTP_PROXY=DIRECT >> /etc/cvmfs/default.local"
         sudo cvmfs_config probe
 
     - name: Create Build Environment
