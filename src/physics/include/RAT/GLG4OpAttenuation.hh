@@ -57,9 +57,9 @@ public: // Without description
         // G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
         // Returns true -> 'is applicable' only for an optical photon.
 
-	// G4double GetMeanFreePath(const G4Track& aTrack,
-	// 			    G4double ,
-	// 			    G4ForceCondition* );
+	G4double GetMeanFreePath(const G4Track& aTrack,
+	 			    G4double ,
+	 			    G4ForceCondition* );
         // Returns the absorption length for bulk absorption of optical
         // photons in media with a specified attenuation length. 
 

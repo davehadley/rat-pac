@@ -170,13 +170,18 @@ GLG4OpAttenuation::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 	G4double GLG4OpAttenuation::GetMeanFreePath(const G4Track& aTrack,
 	 			    G4double x,
 	 			    G4ForceCondition* c) {
-                                          std::cout << "Calling GetMeanFreePath" << std::endl;
-                                          G4double d = G4OpAbsorption::GetMeanFreePath(aTrack, x, c);
-                                          std::cout << "Calling GetMeanFreePath returns " << d << std::endl;
-                                          auto mat = aTrack.GetMaterial();
-                                          std::cout << "DEBUG MAT is:" << mat << std::endl;
-                                          auto table = mat->GetMaterialPropertiesTable();
-                                          std::cout << "DEBUG TABLE is:" << table << std::endl;
-											table->DumpTable();
+                                          G4double d = G4OpAbsorption::GetMeanFreePath(aTrack, x, c);  
+										  auto mat = aTrack.GetMaterial();  
+										  if(mat->GetName()== "doped_water")    {                                   
+											auto table = mat->GetMaterialPropertiesTable();
+											G4MaterialPropertyVector*  abslength = table->GetProperty("ABSLENGTH");
+											G4double secondval = (*abslength)[2];
+											if(secondval != 0.0) {
+												std::cout << "DEBUG MAT is:" << mat << std::endl;
+												std::cout << "DEBUG TABLE is:" << table << std::endl;
+												table->DumpTable();
+												throw std::exception();
+											}
+										  }
                                           return d;
                                      }
