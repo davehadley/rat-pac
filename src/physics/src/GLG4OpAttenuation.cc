@@ -24,6 +24,10 @@
 
 using namespace std;
 
+
+
+
+
         /////////////////
         // Hidden static variables and functions
         /////////////////
@@ -37,6 +41,9 @@ using namespace std;
 #define N_COSTHETA_ENTRIES 129
 static double Cos2ThetaTable[N_COSTHETA_ENTRIES];
 static int TableInitialized= 0;
+
+
+
 
 DummyProcess GLG4OpAttenuation::fgAttenuation("Attenuation");
 DummyProcess GLG4OpAttenuation::fgScattering("Scattering");
@@ -160,3 +167,16 @@ GLG4OpAttenuation::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 }
 
 
+	G4double GLG4OpAttenuation::GetMeanFreePath(const G4Track& aTrack,
+	 			    G4double x,
+	 			    G4ForceCondition* c) {
+                                          std::cout << "Calling GetMeanFreePath" << std::endl;
+                                          G4double d = G4OpAbsorption::GetMeanFreePath(aTrack, x, c);
+                                          std::cout << "Calling GetMeanFreePath returns " << d << std::endl;
+                                          auto mat = aTrack.GetMaterial();
+                                          std::cout << "DEBUG MAT is:" << mat << std::endl;
+                                          auto table = mat->GetMaterialPropertiesTable();
+                                          std::cout << "DEBUG TABLE is:" << table << std::endl;
+											table->DumpTable();
+                                          return d;
+                                     }
